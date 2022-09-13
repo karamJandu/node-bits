@@ -1,0 +1,23 @@
+{
+  "name": "bitfumes_nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karamJandu/node-bits.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/karamJandu/node-bits/issues"
+  },
+  "homepage": "https://github.com/karamJandu/node-bits#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
