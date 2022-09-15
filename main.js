@@ -4,6 +4,7 @@ const EventEmitter = require("events");
 const myEvent = new EventEmitter();
 const bodyParser = require("body-parser");
 const dbConnect = require("./config/db");
+const auth = require("./middleware/auth");
 
 myEvent.on("test-event", () => {
   console.log("this event is listening");
@@ -11,18 +12,19 @@ myEvent.on("test-event", () => {
 
 const app = express();
 app.use(bodyParser.json());
+// app.use(test);
 app.set("view engine", "pug");
 dbConnect();
 
 const port = 3000;
 
-app.get("/", (req, res) => {
+app.get("/", auth, (req, res) => {
   myEvent.emit("test-event");
   res.json({ Response: "Get Method" });
 });
 
 app.use("/api/book", require("./routes/books"));
-app.use("/api/user", require("./routes/user"));
+app.use("/api/auth", require("./routes/user"));
 
 app.get("/send-file", (req, res) => {
   res.render("index.pug", { title: "Welcome", message: "Everyone" });

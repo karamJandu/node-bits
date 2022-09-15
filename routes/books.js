@@ -1,30 +1,16 @@
 const express = require("express");
+const bookController = require("../controller/book");
+
 const router = express.Router();
 
 // routes for all books
-router
-  .route("/")
-  .get((req, res) => {
-    res.json({ Response: "Get All Books" });
-  })
-  .post((req, res) => {
-    res.json({ Response: "Book is stored" });
-  });
+router.route("/").get(bookController.getBooks).post(bookController.addBook);
 
 // routes for individual book
 router
   .route("/:id")
-  .get((req, res) => {
-    const id = req.params.id;
-    res.send(`Get book with id ${id}`);
-  })
-  .put((req, res) => {
-    const id = req.params.id;
-    res.send(`Get book with id ${id}`);
-  })
-  .delete((req, res) => {
-    const id = req.params.id;
-    res.send(`Get book with id ${id}`);
-  });
+  .get(bookController.getBook)
+  .put(bookController.updateBook)
+  .delete(bookController.deleteBook);
 
 module.exports = router;

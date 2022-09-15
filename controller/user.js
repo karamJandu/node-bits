@@ -1,8 +1,14 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const saltRound = process.env.BCRYPT_SALT_ROUND;
 
-const addUser = async (req, res) => {
+const saltRound = process.env.BCRYPT_SALT_ROUND;
+const jwtSecret = process.env.JWT_SECRET;
+
+//
+// Sign Up
+//
+const signUp = async (req, res) => {
   const { email, password } = req.body;
   if (email === null || password === null) {
     res.status(400).json({ message: "Both email and password are required" });
@@ -37,6 +43,9 @@ const addUser = async (req, res) => {
   res.status(200).json(user);
 };
 
+//
+// Get Users
+//
 const getUsers = async (req, res) => {
   const users = await User.find();
   if (users === null) {
@@ -46,4 +55,27 @@ const getUsers = async (req, res) => {
   res.status(200).json(users);
 };
 
-module.exports = { addUser, getUsers };
+//
+// Login User
+//
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (user === null) {
+    res.status(404).json({ message: "Wrong Credentials" });
+    return;
+  }
+
+  const authenticated = await bcrypt.compare(password, user.password);
+  if (!authenticated) {
+    res.status(404).json({ message: "Wrong Credentials" });
+    return;
+  }
+
+  const token = await jwt.sign({ user }, "jwtSecret");
+
+  res.status(200).json({ user, access_token: token });
+};
+
+module.exports = { signUp, getUsers, loginUser };
